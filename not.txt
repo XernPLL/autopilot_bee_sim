@@ -1,0 +1,155 @@
+ozumiem – chcesz, żeby Twój projekt drona miał swoje repo, a jednocześnie zawierał ArduPilot, który możesz modyfikować i pushować do swojego GitHub, a potem pullować na drugim komputerze. To bardzo typowy workflow. 👍
+
+Najlepszy sposób to fork + submodule albo fork + osobny repo w projekcie. Najpierw pokażę najprostszy i najczęściej używany.
+
+1️⃣ Zrób fork ArduPilot na GitHub
+
+Wejdź na:
+
+ArduPilot repo:
+
+https://github.com/ArduPilot/ardupilot
+
+Kliknij Fork (prawy górny róg).
+
+Powstanie repo:
+
+github.com/TWOJ_LOGIN/ardupilot
+
+To jest Twoja kopia repo.
+
+2️⃣ Sklonuj swojego forka do projektu drona
+
+Struktura projektu:
+
+~/projects/drone-alpha/
+  external/
+    ardupilot/
+  src/
+  configs/
+  scripts/
+
+Klonowanie:
+
+cd ~/projects/drone-alpha/external
+git clone https://github.com/TWOJ_LOGIN/ardupilot.git
+
+Teraz:
+
+external/ardupilot
+
+jest repo Twojego forka, nie oryginału.
+
+3️⃣ Dodaj upstream (oryginalny ArduPilot)
+
+Żeby móc pobierać zmiany z głównego repo:
+
+cd external/ardupilot
+
+git remote add upstream https://github.com/ArduPilot/ardupilot.git
+
+Sprawdź:
+
+git remote -v
+
+Powinno być:
+
+origin    -> twoj fork
+upstream  -> główny ArduPilot
+4️⃣ Edytujesz kod ArduPilot
+
+Np.:
+
+external/ardupilot/ArduCopter/...
+
+Potem:
+
+git add .
+git commit -m "zmiana w firmware drona alpha"
+git push
+
+I zmiany lecą do:
+
+github.com/TWOJ_LOGIN/ardupilot
+5️⃣ Na drugim komputerze
+
+Wchodzisz do:
+
+external/ardupilot
+
+i robisz:
+
+git pull
+
+I masz te same zmiany.
+
+6️⃣ Aktualizowanie z głównego ArduPilot
+
+Jeśli chcesz pobrać nowe zmiany z głównego repo:
+
+git fetch upstream
+git merge upstream/master
+
+albo:
+
+git pull upstream master
+Jak wygląda cały projekt drona
+
+Przykład dobrego layoutu:
+
+~/projects/
+  drone-alpha/
+    .git
+    src/
+    configs/
+    scripts/
+    external/
+      ardupilot/
+  drone-beta/
+    .git
+    src/
+    configs/
+    scripts/
+    external/
+      ardupilot/
+
+Każdy dron:
+
+własne repo
+
+własny ArduPilot fork
+
+własne configi
+
+Co się stanie gdy zrobisz push
+
+Jeśli edytujesz ArduPilot i zrobisz:
+
+git push
+
+to:
+
+twoj komputer -> GitHub -> drugi komputer
+
+czyli dokładnie to co chcesz.
+
+Największy błąd który ludzie robią
+
+Klonują:
+
+github.com/ArduPilot/ardupilot
+
+i potem nie mogą pushować.
+
+Dlatego zawsze:
+
+fork -> clone swojego forka
+Pro tip dla ArduPilot devów
+
+Często robi się branch dla drona:
+
+git checkout -b drone-alpha
+
+I wszystkie zmiany firmware są w tym branchu.
+
+✅ Jeśli chcesz, mogę też pokazać architekturę repo dla projektu drona (ArduPilot + symulacja + AI + telemetry) – taką jak robią zespoły UAV.
